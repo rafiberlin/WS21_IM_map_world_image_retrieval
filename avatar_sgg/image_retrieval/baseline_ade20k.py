@@ -1,4 +1,4 @@
-from avatar_sgg.dataset.util import get_ade20k_split
+from avatar_sgg.dataset.ade20k import get_ade20k_split
 from avatar_sgg.config.util import get_config
 from avatar_sgg.image_retrieval.evaluation import compute_similarity, compute_average_similarity_against_generated_caption, \
     compute_recall_on_category, compute_recall_johnson_feiefei, add_inferred_captions, merge_human_captions, \

@@ -1,7 +1,7 @@
 import torch, collections
 from sentence_transformers import SentenceTransformer
 from avatar_sgg.sentence_embedding.util import vectorize_captions
-from avatar_sgg.dataset.util import get_categories
+from avatar_sgg.dataset.ade20k import get_categories
 from avatar_sgg.captioning.catr.inference import CATRInference
 import string
 import json
@@ -432,7 +432,7 @@ def merge_log_results_in_directory(dir_path):
 
 def test_cosine():
     from avatar_sgg.config.util import get_config
-    from avatar_sgg.dataset.util import get_ade20k_split
+    from avatar_sgg.dataset.ade20k import get_ade20k_split
 
     output_dir = os.path.join(get_config()["output_dir"], "image_retrieval")
     train, dev, test = get_ade20k_split()
