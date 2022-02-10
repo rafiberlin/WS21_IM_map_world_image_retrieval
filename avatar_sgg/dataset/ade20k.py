@@ -9,6 +9,7 @@ import torch.utils.data as data
 import os
 import sng_parser
 
+
 def get_ade20k_caption_annotations():
     """
     Precondition: checkout the https://github.com/clp-research/image-description-sequences under the location
@@ -89,25 +90,27 @@ def get_categories(split):
         cat = {i: split[k]["category"] for i, k in enumerate(split)}
     return cat
 
+
 def group_entry_per_category(category):
     category_to_entry_lookup = collections.defaultdict(list)
     for k, v in category.items():
         category_to_entry_lookup[v].append(k)
 
 
-
-
 class SGEncodingADE20KMapWorldInstances(data.Dataset):
     """ SGEncoding dataset """
 
-    def __init__(self):
+    def __init__(self, img_graph_file_name=None):
         super(SGEncodingADE20KMapWorldInstances, self).__init__()
 
         conf = get_config()["scene_graph"]
         cap_graph_file = conf["capgraphs_file"]
         vg_dict_file = conf["visual_genome_dict_file"]
-        ade20k_map_world_preprocessed_img_graph_file  = conf["ade20k_map_world_preprocessed_img_graph"]
-
+        if img_graph_file_name is None:
+            ade20k_map_world_preprocessed_img_graph_file = conf["ade20k_map_world_preprocessed_img_graph"]
+        else:
+            ade20k_map_world_preprocessed_img_graph_file = img_graph_file_name
+        print("Loading", ade20k_map_world_preprocessed_img_graph_file)
         cap_graph = json.load(open(cap_graph_file))
         vg_dict = json.load(open(vg_dict_file))
 
@@ -128,10 +131,8 @@ class SGEncodingADE20KMapWorldInstances(data.Dataset):
         self.num_sgg_obj = len(self.sgg_obj_vocab)
         self.num_txt_obj = len(self.txt_obj_vocab)
 
-
     def get(self, key):
         return self.img_sg[key]
-
 
     def _to_tensor(self, inp_dict):
         return {'entities': torch.LongTensor(inp_dict['entities']),
@@ -177,20 +178,43 @@ class SGEncodingADE20KMapWorldInstances(data.Dataset):
             extracted_graph = {'entities': filtered_entities, 'relations': filtered_relations}
             cleaned_graphs.append(extracted_graph)
 
-
         return cleaned_graphs
 
+
+def output_split_list_with_new_prefix(split, old, new, file_path):
+    """
+
+    :param split:
+    :param old:
+    :param new:
+    :param file_path:
+    :return:
+    """
+    prefix_index_end = len(old)
+
+    new_paths = []
+    for k in split.keys():
+        idx_start = k.find(old)
+        new_paths.append(new + k[idx_start + prefix_index_end:])
+
+    with open(file_path, 'w') as outfile:
+        json.dump(new_paths, outfile)
+
+    print("Saved", file_path)
 
 
 if __name__ == "__main__":
     print("Start")
+    conf = get_config()
     train, dev, test = get_ade20k_split()
     # print(f"Train Split: {len(train)}")
     # print(f"Dev Split: {len(dev)}")
     # print(f"Test Split: {len(test)}")
 
-    map_world_dataset = SGEncodingADE20KMapWorldInstances()
-    pass
+    # output_split_list_with_new_prefix(test, "/media/rafi/Samsung_T5/_DATASETS/ADE20K/",
+    #                                   "/data/ImageCorpora/ADE20K_2016_07_26/",
+    #                                   get_config()["output_dir"] + "/ade20k_caption_test.json")
 
+    img_graphs = json.load(open(conf["scene_graph"]["ade20k_caption_test"]))
 
     print("Done")
