@@ -23,6 +23,7 @@ scene_graph: # config files come from instructions in  https://github.com/Kaihua
   ade20k_map_world_preprocessed_img_graph: "/media/rafi/Samsung_T5/_DATASETS/vg/sgg/ade20k_debug/sg_of_causal_sgdet_custom_img_graph_only.json"
   ade_cat_instances_complete_path: "/home/rafi/PycharmProjects/clp-sose21-pm-vision/avatar_sgg/resources/ade_cat_instances_full_path.json"
   ade20k_caption_test: "/home/rafi/PycharmProjects/clp-sose21-pm-vision/avatar_sgg/resources/sg_ade20k_test_caption_img_graph_only.json"
+  pretrained_model_path: "/media/rafi/Samsung_T5/_DATASETS/vg/new_model/model_9.pytorch"
 
 output_dir: "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results"
 
