@@ -141,20 +141,36 @@ class SGEncode(nn.Module):
 
         return self.final_fc(sg_encode).sum(0).view(1, -1)
 
-    def forward(self, fg_imgs, fg_txts):
+    def _to_tensor(self, inp_dict):
+        return {'entities': torch.LongTensor(inp_dict['entities']),
+                'relations': torch.LongTensor(inp_dict['relations'])}
+
+    def __generate_tensor(self, graph_dict):
+        img = self._to_tensor(graph_dict['img'])
+        img_graph = torch.FloatTensor(graph_dict['image_graph'])
+        img['graph'] = img_graph
+
+        txt = self._to_tensor(graph_dict['txt'])
+        txt_graph = torch.FloatTensor(graph_dict['text_graph'])
+        txt['graph'] = txt_graph
+        return img, txt
+
+
+    def forward(self, graph_dict):
         """
         Modified from the original to only perform the inference.
         :param fg_imgs:
         :param fg_txts:
         :return:
         """
-        encode_list = []
-        for fg_img, fg_txt, bg_img, bg_txt in zip(fg_imgs, fg_txts):
-            fg_img_encode = self.encode(fg_img, is_img=True)
-            fg_txt_encode = self.encode(fg_txt, is_txt=True)
-            encode_list.append([fg_img_encode, fg_txt_encode])
 
-        return encode_list
+        assert type(graph_dict) is dict
+
+        fg_img, fg_txt = self.__generate_tensor(graph_dict)
+        fg_img_encode = self.encode(fg_img, is_img=True)
+        fg_txt_encode = self.encode(fg_txt, is_txt=True)
+
+        return torch.stack([fg_img_encode[0], fg_txt_encode[0]])
 
 def get_scene_graph_encoder(pretrained_model_path=None):
     """

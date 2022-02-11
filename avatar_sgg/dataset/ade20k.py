@@ -8,9 +8,10 @@ import torch
 import torch.utils.data as data
 import os
 import sng_parser
+import numpy as np
 
 
-def get_ade20k_caption_annotations():
+def get_ade20k_caption_annotations(path_prefix=None):
     """
     Precondition: checkout the https://github.com/clp-research/image-description-sequences under the location
     of the ade20k_dir directory
@@ -34,8 +35,13 @@ def get_ade20k_caption_annotations():
                                                                                         axis=1).T
     sequences_fram = sequences_df[["image_id", "image_path", "image_cat", "merged_sequences"]]
     captions_df = pd.merge(captions_df, sequences_fram, how='inner', left_on=['image_id'], right_on=['image_id'])
-    captions_df["image_path"] = captions_df["image_path"].map(
-        lambda a: os.path.join("file://", ade20k_dir, "images", a))
+    if path_prefix is None:
+        print("Using Real Image Paths as Key.")
+        captions_df["image_path"] = captions_df["image_path"].map(
+            lambda a: os.path.join("file://", ade20k_dir, "images", a))
+    else:
+        captions_df["image_path"] = captions_df["image_path"].map(
+            lambda a: os.path.join(path_prefix, a))
     captions_df.drop(["Unnamed: 0"], axis=1)
 
     captions_list = [{"image_id": row["image_id"], "id": row["caption_id"], "caption": row["caption"],
@@ -60,7 +66,7 @@ def get_ade20k_caption_annotations():
     return image_path_to_caption
 
 
-def get_ade20k_split(test_proportion: int = 15, test_size: int = 10):
+def get_ade20k_split(test_proportion: int = 15, test_size: int = 10, path_prefix=None):
     """
     Returns train, dev and test split.
     Dev has only one image.
@@ -69,7 +75,7 @@ def get_ade20k_split(test_proportion: int = 15, test_size: int = 10):
     :return:
     """
     assert test_proportion > 0 and test_proportion < 100
-    captions = get_ade20k_caption_annotations()
+    captions = get_ade20k_caption_annotations(path_prefix)
     # Make the split consistent
     random.seed(1)
     keys = list(captions.keys())
@@ -96,66 +102,6 @@ def group_entry_per_category(category):
     for k, v in category.items():
         category_to_entry_lookup[v].append(k)
 
-
-class SGEncodingADE20KMapWorldInstances(data.Dataset):
-    """ SGEncoding dataset """
-
-    def __init__(self, img_graph_file_name=None):
-        super(SGEncodingADE20KMapWorldInstances, self).__init__()
-
-        conf = get_config()["scene_graph"]
-        cap_graph_file = conf["capgraphs_file"]
-        vg_dict_file = conf["visual_genome_dict_file"]
-        if img_graph_file_name is None:
-            ade20k_map_world_preprocessed_img_graph_file = conf["ade20k_map_world_preprocessed_img_graph"]
-        else:
-            ade20k_map_world_preprocessed_img_graph_file = img_graph_file_name
-        print("Loading", ade20k_map_world_preprocessed_img_graph_file)
-        cap_graph = json.load(open(cap_graph_file))
-        vg_dict = json.load(open(vg_dict_file))
-
-        self.img_sg = json.load(open(ade20k_map_world_preprocessed_img_graph_file))
-        self.key_list = list(self.img_sg.keys())
-
-        # generate union predicate vocabulary
-        self.sgg_rel_vocab = list(set(cap_graph['idx_to_meta_predicate'].values()))
-        self.txt_rel_vocab = list(set(cap_graph['cap_predicate'].keys()))
-
-        # generate union object vocabulary
-        self.sgg_obj_vocab = list(set(vg_dict['idx_to_label'].values()))
-        self.txt_obj_vocab = list(set(cap_graph['cap_category'].keys()))
-
-        # vocabulary length
-        self.num_sgg_rel = len(self.sgg_rel_vocab)
-        self.num_txt_rel = len(self.txt_rel_vocab)
-        self.num_sgg_obj = len(self.sgg_obj_vocab)
-        self.num_txt_obj = len(self.txt_obj_vocab)
-
-    def get(self, key):
-        return self.img_sg[key]
-
-    def _to_tensor(self, inp_dict):
-        return {'entities': torch.LongTensor(inp_dict['entities']),
-                'relations': torch.LongTensor(inp_dict['relations'])}
-
-    def _generate_tensor_by_idx(self, idx):
-        img = self._to_tensor(self.img_sg[self.key_list[idx]]['img'])
-        img_graph = torch.FloatTensor(self.img_sg[self.key_list[idx]]['image_graph'])
-        img['graph'] = img_graph
-
-        # txt = self._to_tensor(self.img_txt_sg[self.key_list[idx]]['txt'])
-        # txt_graph = torch.FloatTensor(self.img_txt_sg[self.key_list[idx]]['text_graph'])
-        # txt['graph'] = txt_graph
-        return img
-
-    def __getitem__(self, item):
-        fg_img = self._generate_tensor_by_idx(item)
-
-        return fg_img
-
-    def __len__(self):
-        return len(self.key_list)
-
     def generate_text_graph(self, captions):
         raw_graphs = None
 
@@ -166,28 +112,14 @@ class SGEncodingADE20KMapWorldInstances(data.Dataset):
         else:
             assert raw_graphs is not None
 
-        cleaned_graphs = []
-        for i, g in enumerate(raw_graphs):
-            entities = g["entities"]
-            relations = g["relations"]
-            filtered_entities = [e["lemma_head"] if e["lemma_head"] in self.txt_obj_vocab else 'none' for e in
-                                 entities]
-            filtered_relations = [[r["subject"], r["object"], r["lemma_relation"]] for r in relations if
-                                  r["lemma_relation"] in self.txt_rel_vocab]
-
-            extracted_graph = {'entities': filtered_entities, 'relations': filtered_relations}
-            cleaned_graphs.append(extracted_graph)
-
-        return cleaned_graphs
-
 
 def output_split_list_with_new_prefix(split, old, new, file_path):
     """
 
     :param split:
-    :param old:
-    :param new:
-    :param file_path:
+    :param old: old prefix
+    :param new: new prefix
+    :param file_path: where to write the file
     :return:
     """
     prefix_index_end = len(old)
@@ -203,18 +135,119 @@ def output_split_list_with_new_prefix(split, old, new, file_path):
     print("Saved", file_path)
 
 
+def generate_text_graph(split, output_path):
+    if not os.path.isfile(output_path):
+        text_graphs = {}
+        conf = get_config()["scene_graph"]
+        cap_graph_file = conf["capgraphs_file"]
+        cap_graph = json.load(open(cap_graph_file))
+        txt_rel_vocab = list(set(cap_graph['cap_predicate'].keys()))
+        txt_rel2id = {key: i + 1 for i, key in enumerate(txt_rel_vocab)}
+        txt_obj_vocab = list(set(cap_graph['cap_category'].keys()))
+        txt_obj2id = {key: i + 1 for i, key in enumerate(txt_obj_vocab)}
+
+        # generate union object vocabulary
+        txt_obj_vocab = list(set(cap_graph['cap_category'].keys()))
+
+        for k in split.keys():
+            captions = split[k]["caption"]
+
+            if type(captions) is list:
+                raw_graphs = [sng_parser.parse(cap) for cap in captions]
+            elif type(captions) is str:
+                raw_graphs = [sng_parser.parse(captions)]
+            else:
+                assert raw_graphs is not None
+            cleaned_graphs = []
+            for i, g in enumerate(raw_graphs):
+                entities = g["entities"]
+                relations = g["relations"]
+                filtered_entities = [e["lemma_head"] if e["lemma_head"] in txt_obj_vocab else 'none' for e in
+                                     entities]
+                filtered_relations = [[r["subject"], r["object"], r["lemma_relation"]] for r in relations if
+                                      r["lemma_relation"] in txt_rel_vocab]
+
+                extracted_graph = {'entities': filtered_entities, 'relations': filtered_relations}
+                cleaned_graphs.append(extracted_graph)
+
+            encode_txt = {'entities': [], 'relations': []}
+
+            for item in cleaned_graphs:
+                entities = [txt_obj2id[e] for e in item['entities']]
+                relations = [[entities[r[0]], entities[r[1]], txt_rel2id[r[2]]] for r in item['relations']]
+                encode_txt['entities'] = encode_txt['entities'] + entities
+                encode_txt['relations'] = encode_txt['relations'] + relations
+
+            # === for text_graph =============================================here
+            entities = encode_txt['entities']
+            relations = encode_txt['relations']
+            if len(relations) == 0:
+                txt_graph = np.zeros((len(entities), 1))
+            else:
+                txt_graph = np.zeros((len(entities), len(relations)))
+
+            text_graph = []
+            for i, es in enumerate(entities):
+                for j, rs in enumerate(relations):
+                    if es in rs:
+                        txt_graph[i, j] = 1
+                    else:
+                        txt_graph[i, j] = 0
+
+            text_graph.append(txt_graph.tolist())
+
+            text_graphs[k] = {
+                'txt': encode_txt,
+                'text_graph': text_graph}
+
+        with open(output_path, 'w') as outfile:
+            print("Saving Text Graphs under:", output_path)
+            json.dump(text_graphs, outfile)
+    else:
+        print("Loading:", output_path)
+        text_graphs = json.load(open(output_path))
+
+    return text_graphs
+
+
+def get_preprocessed_image_text_graphs_for_test():
+    """
+    Returns a dictionary (key identifies an image), of dictionaries of this form:
+
+    {   'img': encode_txt,
+        'image_graph': text_graph,
+        'txt': encode_txt,
+        'text_graph': text_graph}
+    :return:
+    """
+
+    conf = get_config()
+    _, _, test = get_ade20k_split(path_prefix="images")
+    img_graphs = json.load(open(conf["scene_graph"]["ade20k_image_sg_test"]))
+    txt_graphs = generate_text_graph(test, conf["scene_graph"]["ade20k_text_sg_test"])
+
+    txt_keys = list(txt_graphs.keys())
+    for k in list(img_graphs.keys()):
+        assert k in txt_keys
+
+    for k, item in img_graphs.items():
+        item.update(txt_graphs[k])
+
+    return img_graphs
+
+
 if __name__ == "__main__":
     print("Start")
     conf = get_config()
-    train, dev, test = get_ade20k_split()
-    # print(f"Train Split: {len(train)}")
-    # print(f"Dev Split: {len(dev)}")
-    # print(f"Test Split: {len(test)}")
+    train, dev, test = get_ade20k_split(path_prefix="images")
+    print(f"Train Split: {len(train)}")
+    print(f"Dev Split: {len(dev)}")
+    print(f"Test Split: {len(test)}")
 
     # output_split_list_with_new_prefix(test, "/media/rafi/Samsung_T5/_DATASETS/ADE20K/",
     #                                   "/data/ImageCorpora/ADE20K_2016_07_26/",
     #                                   get_config()["output_dir"] + "/ade20k_caption_test.json")
 
-    img_graphs = json.load(open(conf["scene_graph"]["ade20k_caption_test"]))
+    graph = get_preprocessed_image_text_graphs_for_test()
 
     print("Done")
