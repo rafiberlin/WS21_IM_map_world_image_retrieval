@@ -1,8 +1,9 @@
 import torch, collections
 from sentence_transformers import SentenceTransformer
 from avatar_sgg.sentence_embedding.util import vectorize_captions
-from avatar_sgg.dataset.util import get_categories
+from avatar_sgg.dataset.ade20k import get_categories
 from avatar_sgg.captioning.catr.inference import CATRInference
+from avatar_sgg.image_retrieval.scene_graph_similarity_model import get_scene_graph_encoder
 import string
 import json
 import os
@@ -171,12 +172,11 @@ def compute_similarity(ade20k_split, threshold=None, recall_funct=compute_recall
     mean_rank_list = []
     similarity_list = []
     for pair in all_caption_pairs:
-        similarity = calculate_normalized_cosine_similarity_for_captions(stacked_vectors[:, pair,:])
+        similarity = calculate_normalized_cosine_similarity_for_captions(stacked_vectors[:, pair, :])
         recall_val, mean_rank = recall_funct(similarity, threshold, category)
         similarity_list.append(similarity.diag().mean().to("cpu").numpy())
         recall_list.append(recall_val)
         mean_rank_list.append(mean_rank)
-
 
     recall_mean = pd.DataFrame(recall_list).mean().to_dict()
     average_mean_rank = pd.DataFrame(mean_rank_list).mean()[0]
@@ -188,7 +188,6 @@ def compute_similarity(ade20k_split, threshold=None, recall_funct=compute_recall
     recall_mean["mean_rank"] = average_mean_rank
     print(f"Mean Rank: {average_mean_rank}")
 
-
     print(f"Average Similarity: {average_similarity}")
 
     recall_mean["average_similarity"] = average_similarity
@@ -196,7 +195,65 @@ def compute_similarity(ade20k_split, threshold=None, recall_funct=compute_recall
     return recall_mean
 
 
-def compute_average_similarity_against_generated_caption(ade20k_split, threshold=None, recall_funct=compute_recall_johnson_feiefei):
+def compute_scene_graph_similarity(ade20k_split, threshold=None,
+                                                         recall_funct=compute_recall_johnson_feiefei):
+    """
+
+    :param ade20k_split:
+    :param threshold:
+    :param recall_funct:
+    :return:
+    """
+    model = get_scene_graph_encoder()
+    model.eval()
+    test_results = []
+
+    with torch.no_grad():
+        for k, graph_dict in ade20k_split.items():
+            res = model(graph_dict)
+            test_results.append(res)
+    stacked_vectors = torch.stack(test_results)
+    category = get_categories(ade20k_split)
+
+    num_captions = stacked_vectors.shape[1]
+    index_inferred_caption = num_captions - 1
+    index_range_human_captions = index_inferred_caption
+
+    caption_dim = 1
+    recall_list = []
+    mean_rank_list = []
+    similarity_list = []
+    for index_caption in range(index_range_human_captions):
+        comparison = torch.cat((stacked_vectors[:, index_caption, :].unsqueeze(caption_dim),
+                                stacked_vectors[:, index_inferred_caption, :].unsqueeze(caption_dim)),
+                               dim=caption_dim)
+
+        similarity_caption = calculate_normalized_cosine_similarity_for_captions(comparison)
+        recall_val, mean_rank = recall_funct(similarity_caption, threshold, category)
+        similarity_list.append(similarity_caption.diag().mean().to("cpu").numpy())
+        recall_list.append(recall_val)
+        mean_rank_list.append(mean_rank)
+
+    print(f"Threshold for retrieval: {threshold}")
+
+    recall_mean = pd.DataFrame(recall_list).mean().to_dict()
+    average_mean_rank = pd.DataFrame(mean_rank_list).mean()[0]
+    average_similarity = pd.DataFrame(similarity_list).mean()[0]
+    for k in recall_mean.keys():
+        print(f"Average {k}: {recall_mean[k]}")
+
+    recall_mean["mean_rank"] = average_mean_rank
+
+    print(f"Average Mean Rank: {average_mean_rank}")
+
+    print(f"Average Similarity{average_similarity}")
+
+    recall_mean["average_similarity"] = average_similarity
+    recall_mean["threshold"] = threshold
+    return recall_mean
+
+def compute_average_similarity_against_generated_caption(ade20k_split, threshold=None,
+                                                         recall_funct=compute_recall_johnson_feiefei):
     """
     Pre-requisite. The ade20k_split has been enriched with 'add_inferred_captions()'. The synthetic caption (always
     added at the end of the human captions) are used as query to retrieve the images based on the human captions.
@@ -221,8 +278,8 @@ def compute_average_similarity_against_generated_caption(ade20k_split, threshold
     similarity_list = []
     for index_caption in range(index_range_human_captions):
         comparison = torch.cat((stacked_vectors[:, index_caption, :].unsqueeze(caption_dim),
-                                  stacked_vectors[:, index_inferred_caption, :].unsqueeze(caption_dim)),
-                                 dim=caption_dim)
+                                stacked_vectors[:, index_inferred_caption, :].unsqueeze(caption_dim)),
+                               dim=caption_dim)
 
         similarity_caption = calculate_normalized_cosine_similarity_for_captions(comparison)
         recall_val, mean_rank = recall_funct(similarity_caption, threshold, category)
@@ -252,7 +309,7 @@ def compute_average_similarity_against_generated_caption(ade20k_split, threshold
 def merge_human_captions(data_split):
     """
     Merges all Human captions together, let the CATR caption separate.
-    :param data_split_copy:
+    :param data_split:
     :return:
     """
 
@@ -272,11 +329,13 @@ def merge_human_captions(data_split):
         data_split_copy[path]["caption"] = [human_captions, catr_caption]
 
     return data_split_copy
+
+
 def use_merged_sequence(data_split):
     """
     Remove human captions, use the merged sequences of descriptions instead.
     Intended to use when CATR caption have been generated
-    :param data_split_copy:
+    :param data_split:
     :return:
     """
 
@@ -288,6 +347,7 @@ def use_merged_sequence(data_split):
         data_split_copy[path]["caption"] = [data_split_copy[path]["merged_sequences"], catr_caption]
 
     return data_split_copy
+
 
 def add_inferred_captions(data_split):
     """
@@ -302,6 +362,7 @@ def add_inferred_captions(data_split):
         data_split_copy[path]["caption"].append(output)
 
     return data_split_copy
+
 
 def read_game_logs(file_path):
     """
@@ -324,7 +385,7 @@ def read_game_logs(file_path):
 
         start = None
         end = None
-        real_end = None  # WHen The came master says COngrats or you die, because rest of the messages looks like bugs...
+        real_end = None  # WHen The game master says COngrats or you die, because rest of the messages looks like bugs...
         episode_list = []
         length = len(log)
         game_finished = False
@@ -430,9 +491,10 @@ def merge_log_results_in_directory(dir_path):
 
     return df
 
+
 def test_cosine():
     from avatar_sgg.config.util import get_config
-    from avatar_sgg.dataset.util import get_ade20k_split
+    from avatar_sgg.dataset.ade20k import get_ade20k_split
 
     output_dir = os.path.join(get_config()["output_dir"], "image_retrieval")
     train, dev, test = get_ade20k_split()
@@ -445,6 +507,7 @@ def test_cosine():
     similarity = calculate_normalized_cosine_similarity(first_embeds, query)
     values, ranks = torch.topk(similarity, 1, dim=0)
     print(values, ranks)
+
 
 def run_evaluation(evaluation_name, split, similarity_function, threshold_list, recall_function, output_dir):
     values = []
@@ -460,6 +523,7 @@ def run_evaluation(evaluation_name, split, similarity_function, threshold_list, 
     output_path = os.path.join(output_dir, evaluation_name + ".csv")
     print(f"Saving data to {output_path}")
     df.to_csv(output_path)
+
 
 
 if __name__ == "__main__":
