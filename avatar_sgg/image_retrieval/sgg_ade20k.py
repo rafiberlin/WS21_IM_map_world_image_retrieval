@@ -26,7 +26,7 @@ if __name__ == "__main__":
     fei_fei_recall = "feifei_johnson_recall"
     text_scene_graph_query = "text_scene_graph_query "
     evaluation_name = eval_name(text_scene_graph_query , fei_fei_recall)
-    threshold_list.extend(np.linspace(0.70, 0.90, 15))
+    threshold_list.extend(np.linspace(0.65, 0.85, 15))
     run_evaluation(evaluation_name, current, compute_scene_graph_similarity, threshold_list, compute_recall_johnson_feiefei,
                    output_dir)
 
