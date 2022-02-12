@@ -31,7 +31,7 @@ if __name__ == "__main__":
                    output_dir)
 
     evaluation_name = eval_name(text_scene_graph_query, ade20k_category_recall)
-    run_evaluation(evaluation_name, current, compute_scene_graph_similarity, threshold_list, compute_recall_on_category(),
+    run_evaluation(evaluation_name, current, compute_scene_graph_similarity, threshold_list, compute_recall_on_category,
                    output_dir)
 
     print("Done")
