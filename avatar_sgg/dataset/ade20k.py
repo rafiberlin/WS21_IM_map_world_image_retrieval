@@ -198,7 +198,8 @@ def generate_text_graph(split, output_path):
 
             text_graphs[k] = {
                 'txt': encode_txt,
-                'text_graph': text_graph}
+                'text_graph': text_graph,
+                'category': split[k]["category"]}#needed later to perform the category based recall
 
         with open(output_path, 'w') as outfile:
             print("Saving Text Graphs under:", output_path)
@@ -230,8 +231,18 @@ def get_preprocessed_image_text_graphs_for_test():
     for k in list(img_graphs.keys()):
         assert k in txt_keys
 
-    for k, item in img_graphs.items():
-        item.update(txt_graphs[k])
+    for k in txt_keys:
+        item = img_graphs[k]
+        if len(item["img"]['entities']) < 2 \
+                or len(txt_graphs[k]["txt"]['entities']) < 2 \
+                or len(item["img"]['relations']) < 1 \
+                or len(txt_graphs[k]["txt"]['relations']) < 1:
+            print("no relationship detected, skipping:", k)
+            del(img_graphs[k])
+            del (txt_graphs[k])
+            continue
+        else:
+            item.update(txt_graphs[k])
 
     return img_graphs
 
