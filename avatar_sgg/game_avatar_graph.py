@@ -112,7 +112,8 @@ class GraphAvatar(Avatar):
 
     def __load_image_graphs(self):
 
-        self.current_image_graphs = {k: self.map_world_preprocessed_image_graphs[k] for k in self.map_nodes.keys()}
+        # adding a '/' is a work around, as I preprocessed all the image graphs with the starting '/' unfortunately...
+        self.current_image_graphs = {item: self.map_world_preprocessed_image_graphs['/'+item] for k, item in self.map_nodes.items()}
 
     def step(self, observation: dict) -> dict:
         if self.debug:
