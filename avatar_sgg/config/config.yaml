@@ -25,6 +25,7 @@ scene_graph: # config files come from instructions in  https://github.com/Kaihua
   ade20k_image_sg_test: "/home/rafi/PycharmProjects/clp-sose21-pm-vision/avatar_sgg/resources/sg_ade20k_test_caption_img_graph_only.json"
   ade20k_text_sg_test: "/home/rafi/PycharmProjects/clp-sose21-pm-vision/avatar_sgg/resources/sg_ade20k_test_caption_text_graph_only.json"
   pretrained_model_path: "/media/rafi/Samsung_T5/_DATASETS/vg/new_model/model_9.pytorch"
+  cuda_device: "cuda:0"
 
 output_dir: "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results"
 
