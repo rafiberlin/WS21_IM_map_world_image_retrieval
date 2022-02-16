@@ -174,6 +174,8 @@ class GraphAvatar(Avatar):
                 found_msg = " I believe I found the room based on your description."
             return f"You interacted {self.number_of_interaction} times with me.{found_msg}"
         else:
+            last_idx = len(self.interactions) - 1
+            self.interactions.pop(last_idx)
             return "Sorry, could you try to describe the scene more precisely? (I can't infer a useful text graph.)"
 
     def __predict_move_action(self, message: str) -> str:
