@@ -529,6 +529,7 @@ def run_evaluation(evaluation_name, split, similarity_function, threshold_list, 
 if __name__ == "__main__":
     print("Start")
     # test_cosine()
-    log_path = "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results/slurk_logs/baseline/"
+    #log_path = "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results/slurk_logs/baseline/"
+    log_path = "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results/slurk_logs/scene_graph_based/"
     df = merge_log_results_in_directory(log_path)
-    print("End")
+    print("End",df)

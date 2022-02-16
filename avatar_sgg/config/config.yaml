@@ -37,9 +37,9 @@ game_setup:
     rooms: 10
   avatar:
     room_list: 100 #in percent, defines the number of rooms it should get from the game master
-    include_player_room: False # Boolean True or False ,defines if the room where the player is stuck should be included or not
+    include_player_room: True # Boolean True or False ,defines if the room where the player is stuck should be included or not
     max_number_of_interaction: 3 # Defines the number of interactions a player is allowed to have
-    similarity_threshold: 0.57 # If during the allowed number of interactions, the robot identifies any images over this threshold, it stops the game to give it a try.
+    similarity_threshold: 0.76 # If during the allowed number of interactions, the robot identifies any images over this threshold, it stops the game to give it a try.
     minimum_similarity_threshold: 0.51  # This is the bare minimum to for the robot to say that it has some clues about the rooms. Otherwise it says it hasn t seen the room.
     aggregate_interaction: True # Boolean True or False. Decides whether all player description are merged to one big description
   debug: True # Boolean True or False, output some more messages
