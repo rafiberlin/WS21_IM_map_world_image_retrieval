@@ -135,7 +135,7 @@ def output_split_list_with_new_prefix(split, old, new, file_path):
     print("Saved", file_path)
 
 
-def generate_text_graph(split, output_path):
+def generate_text_graph(split, output_path, caption_number=None):
     if not os.path.isfile(output_path):
         text_graphs = {}
         conf = get_config()["scene_graph"]
@@ -150,7 +150,11 @@ def generate_text_graph(split, output_path):
         txt_obj_vocab = list(set(cap_graph['cap_category'].keys()))
 
         for k in split.keys():
-            captions = split[k]["caption"]
+
+            if caption_number is not None:
+                captions = split[k]["caption"][caption_number]
+            else:
+                captions = split[k]["caption"]
 
             if type(captions) is list:
                 raw_graphs = [sng_parser.parse(cap) for cap in captions]
@@ -209,6 +213,35 @@ def generate_text_graph(split, output_path):
         text_graphs = json.load(open(output_path))
 
     return text_graphs
+
+def get_preprocessed_text_text_graphs_for_test():
+    """
+    This function returns the captions of the ADE20K test sets, as graph. They are not merged
+    and are available as tuple in the "entry" key.
+    :return:
+    """
+
+    conf = get_config()
+    _, _, test = get_ade20k_split(path_prefix="images")
+    txt_graphs_1 = generate_text_graph(test, conf["scene_graph"]["ade20k_text_graph_1"], 0)
+    txt_graphs_2 = generate_text_graph(test, conf["scene_graph"]["ade20k_text_graph_2"], 1)
+
+    txt_keys = list(txt_graphs_1.keys())
+
+    txt_graphs = {}
+    for k in txt_keys:
+        item = txt_graphs_1[k]
+        item2 =  txt_graphs_2[k]
+        if len(item["txt"]['entities']) < 2 \
+                or len(item2["txt"]["entities"]) < 2 \
+                or len(item["txt"]['relations']) < 1 \
+                or len(item2["txt"]['relations']) < 1:
+            print("no relationship detected, skipping:", k)
+            continue
+        else:
+            txt_graphs[k] = {"entry": (item, item2), "category": item["category"]}
+
+    return txt_graphs
 
 
 def get_preprocessed_image_text_graphs_for_test():

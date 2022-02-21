@@ -3,7 +3,7 @@ from sentence_transformers import SentenceTransformer
 from avatar_sgg.sentence_embedding.util import vectorize_captions
 from avatar_sgg.dataset.ade20k import get_categories
 from avatar_sgg.captioning.catr.inference import CATRInference
-from avatar_sgg.image_retrieval.scene_graph_similarity_model import get_scene_graph_encoder
+from avatar_sgg.image_retrieval.scene_graph_similarity_model import get_scene_graph_encoder, SGEncode
 import string
 import json
 import os
@@ -251,6 +251,64 @@ def compute_scene_graph_similarity(ade20k_split, threshold=None,
     recall_mean["average_similarity"] = average_similarity
     recall_mean["threshold"] = threshold
     return recall_mean
+
+def compute_text_graph_similarity(ade20k_split, threshold=None,
+                                                         recall_funct=compute_recall_johnson_feiefei):
+    """
+
+    :param ade20k_split:
+    :param threshold:
+    :param recall_funct:
+    :return:
+    """
+    model: SGEncode = get_scene_graph_encoder()
+    model.eval()
+    test_results = []
+
+    with torch.no_grad():
+        for k, graph_dict in ade20k_split.items():
+            res = model.encode_text_graph(graph_dict)
+            test_results.append(res)
+    stacked_vectors = torch.stack(test_results)
+    category = get_categories(ade20k_split)
+
+    num_captions = stacked_vectors.shape[1]
+    index_inferred_caption = num_captions - 1
+    index_range_human_captions = index_inferred_caption
+
+    caption_dim = 1
+    recall_list = []
+    mean_rank_list = []
+    similarity_list = []
+    for index_caption in range(index_range_human_captions):
+        comparison = torch.cat((stacked_vectors[:, index_caption, :].unsqueeze(caption_dim),
+                                stacked_vectors[:, index_inferred_caption, :].unsqueeze(caption_dim)),
+                               dim=caption_dim)
+
+        similarity_caption = calculate_normalized_cosine_similarity_on_tensor(comparison)
+        recall_val, mean_rank = recall_funct(similarity_caption, threshold, category)
+        similarity_list.append(similarity_caption.diag().mean().to("cpu").numpy())
+        recall_list.append(recall_val)
+        mean_rank_list.append(mean_rank)
+
+    print(f"Threshold for retrieval: {threshold}")
+
+    recall_mean = pd.DataFrame(recall_list).mean().to_dict()
+    average_mean_rank = pd.DataFrame(mean_rank_list).mean()[0]
+    average_similarity = pd.DataFrame(similarity_list).mean()[0]
+    for k in recall_mean.keys():
+        print(f"Average {k}: {recall_mean[k]}")
+
+    recall_mean["mean_rank"] = average_mean_rank
+
+    print(f"Average Mean Rank: {average_mean_rank}")
+
+    print(f"Average Similarity{average_similarity}")
+
+    recall_mean["average_similarity"] = average_similarity
+    recall_mean["threshold"] = threshold
+    return recall_mean
+
 
 def compute_average_similarity_against_generated_caption(ade20k_split, threshold=None,
                                                          recall_funct=compute_recall_johnson_feiefei):
