@@ -24,7 +24,7 @@ if __name__ == "__main__":
     eval_name = lambda caption_type, recall_type: f"{caption_type}_{recall_type}"
     ade20k_category_recall = "ade20k_category_recall"
     fei_fei_recall = "feifei_johnson_recall"
-    text_scene_graph_query = "text_scene_graph_query "
+    text_scene_graph_query = "text_scene_graph_query_9_epochs"
     evaluation_name = eval_name(text_scene_graph_query , fei_fei_recall)
     threshold_list.extend(np.linspace(0.65, 0.85, 15))
     run_evaluation(evaluation_name, current, compute_scene_graph_similarity, threshold_list, compute_recall_johnson_feiefei,

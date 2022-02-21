@@ -246,6 +246,11 @@ def get_preprocessed_image_text_graphs_for_test():
 
     return img_graphs
 
+def get_preprocessed_image_graphs_for_map_world():
+
+    conf = get_config()
+    img_graphs = json.load(open(conf["scene_graph"]["ade20k_map_world_preprocessed_img_graph"]))
+    return img_graphs
 
 if __name__ == "__main__":
     print("Start")

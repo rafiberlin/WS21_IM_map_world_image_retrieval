@@ -12,7 +12,7 @@ import pandas as pd
 import itertools
 
 
-def calculate_normalized_cosine_similarity_for_captions(input):
+def calculate_normalized_cosine_similarity_on_tensor(input):
     """
     Input has the dimensions: number of entries * 2 * vector dimension
     :param input:
@@ -172,7 +172,7 @@ def compute_similarity(ade20k_split, threshold=None, recall_funct=compute_recall
     mean_rank_list = []
     similarity_list = []
     for pair in all_caption_pairs:
-        similarity = calculate_normalized_cosine_similarity_for_captions(stacked_vectors[:, pair, :])
+        similarity = calculate_normalized_cosine_similarity_on_tensor(stacked_vectors[:, pair, :])
         recall_val, mean_rank = recall_funct(similarity, threshold, category)
         similarity_list.append(similarity.diag().mean().to("cpu").numpy())
         recall_list.append(recall_val)
@@ -228,7 +228,7 @@ def compute_scene_graph_similarity(ade20k_split, threshold=None,
                                 stacked_vectors[:, index_inferred_caption, :].unsqueeze(caption_dim)),
                                dim=caption_dim)
 
-        similarity_caption = calculate_normalized_cosine_similarity_for_captions(comparison)
+        similarity_caption = calculate_normalized_cosine_similarity_on_tensor(comparison)
         recall_val, mean_rank = recall_funct(similarity_caption, threshold, category)
         similarity_list.append(similarity_caption.diag().mean().to("cpu").numpy())
         recall_list.append(recall_val)
@@ -281,7 +281,7 @@ def compute_average_similarity_against_generated_caption(ade20k_split, threshold
                                 stacked_vectors[:, index_inferred_caption, :].unsqueeze(caption_dim)),
                                dim=caption_dim)
 
-        similarity_caption = calculate_normalized_cosine_similarity_for_captions(comparison)
+        similarity_caption = calculate_normalized_cosine_similarity_on_tensor(comparison)
         recall_val, mean_rank = recall_funct(similarity_caption, threshold, category)
         similarity_list.append(similarity_caption.diag().mean().to("cpu").numpy())
         recall_list.append(recall_val)
@@ -529,6 +529,7 @@ def run_evaluation(evaluation_name, split, similarity_function, threshold_list, 
 if __name__ == "__main__":
     print("Start")
     # test_cosine()
-    log_path = "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results/slurk_logs/baseline/"
+    #log_path = "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results/slurk_logs/baseline/"
+    log_path = "/home/rafi/PycharmProjects/clp-sose21-pm-vision/results/slurk_logs/scene_graph_based/"
     df = merge_log_results_in_directory(log_path)
-    print("End")
+    print("End",df)

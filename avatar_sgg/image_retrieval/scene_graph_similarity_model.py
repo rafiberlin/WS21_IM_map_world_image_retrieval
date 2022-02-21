@@ -2,7 +2,12 @@ import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
 from avatar_sgg.config.util import get_config
+import json
+import numpy as np
+import sng_parser
 
+# The whole model was found under: https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch/blob/master/maskrcnn_benchmark/image_retrieval/modelv2.py
+# Only a slight adjustment has been made for inferences.
 
 class FCNet(nn.Module):
     def __init__(self, in_size, out_size, activate=None, drop=0.0):
@@ -182,8 +187,77 @@ def get_scene_graph_encoder(pretrained_model_path=None):
 
     if pretrained_model_path is None:
         pretrained_model_path = get_config()["scene_graph"]["pretrained_model_path"]
-
-    checkpoint = torch.load(pretrained_model_path,  map_location=torch.device("cpu"))
+    device = "cpu"
+    if torch.cuda.is_available():
+        device = get_config()["scene_graph"]["cuda_device"]
+    checkpoint = torch.load(pretrained_model_path,  map_location=torch.device(device))
     print("Loading pretrained model:", pretrained_model_path)
     model.load_state_dict(checkpoint)
     return model
+
+class TextGraphVectorizer():
+    def __init__(self):
+        conf = get_config()["scene_graph"]
+        cap_graph_file = conf["capgraphs_file"]
+        self.cap_graph = json.load(open(cap_graph_file))
+        self.txt_rel_vocab = list(set(self.cap_graph['cap_predicate'].keys()))
+        self.txt_rel2id = {key: i + 1 for i, key in enumerate(self.txt_rel_vocab)}
+        self.txt_obj_vocab = list(set(self.cap_graph['cap_category'].keys()))
+        self.txt_obj2id = {key: i + 1 for i, key in enumerate(self.txt_obj_vocab)}
+
+    def vectorize(self, captions):
+
+        raw_graphs = None
+        if type(captions) is list:
+            raw_graphs = [sng_parser.parse(cap) for cap in captions]
+        elif type(captions) is str:
+            raw_graphs = [sng_parser.parse(captions)]
+        else:
+            assert raw_graphs is not None
+        cleaned_graphs = []
+        for i, g in enumerate(raw_graphs):
+            entities = g["entities"]
+            relations = g["relations"]
+            filtered_entities = [e["lemma_head"] if e["lemma_head"] in self.txt_obj_vocab else 'none' for e in
+                                 entities]
+            filtered_relations = [[r["subject"], r["object"], r["lemma_relation"]] for r in relations if
+                                  r["lemma_relation"] in self.txt_rel_vocab]
+            #That means one of the captions is not informative enough
+            if len(filtered_entities) < 2 or len(filtered_relations) < 1:
+                return None
+
+            extracted_graph = {'entities': filtered_entities, 'relations': filtered_relations}
+            cleaned_graphs.append(extracted_graph)
+
+        encode_txt = {'entities': [], 'relations': []}
+
+        for item in cleaned_graphs:
+            entities = [self.txt_obj2id[e] for e in item['entities']]
+            relations = [[entities[r[0]], entities[r[1]], self.txt_rel2id[r[2]]] for r in item['relations']]
+            encode_txt['entities'] = encode_txt['entities'] + entities
+            encode_txt['relations'] = encode_txt['relations'] + relations
+
+        # === for text_graph =============================================here
+        entities = encode_txt['entities']
+        relations = encode_txt['relations']
+        if len(relations) == 0:
+            txt_graph = np.zeros((len(entities), 1))
+        else:
+            txt_graph = np.zeros((len(entities), len(relations)))
+
+        text_graph = []
+        for i, es in enumerate(entities):
+            for j, rs in enumerate(relations):
+                if es in rs:
+                    txt_graph[i, j] = 1
+                else:
+                    txt_graph[i, j] = 0
+
+        text_graph.append(txt_graph.tolist())
+
+        return {
+            'txt': encode_txt,
+            'text_graph': text_graph}
+
+if __name__ == "__main__":
+    pass
