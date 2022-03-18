@@ -39,7 +39,8 @@ We used the published pretrained `SGDet, Causal TDE, MOTIFS Model, SUM Fusion` m
 concerning image retrieval under 
 `https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch/blob/master/maskrcnn_benchmark/image_retrieval/S2G-RETRIEVAL.md`
 The json files defined in the configuration under the key `scene_graph` were either dowloaded following instructions 
-for the Scene Graph Benchmark or were produced training the model.
+for the Scene Graph Benchmark or were produced training the model (but are not necessary to play the game, only to run 
+some evaluation) .
 
 To use one of the avatars for a game session, you need to assigne the desired version in:
 
@@ -115,10 +116,7 @@ connect the game master with slurk. By default, this will create image-urls that
 
 Run a (private-mode) browser and go to `localhost:5000` and login as `Player` using the `<player-token>`.
 
-#### 3. Start a browser for the 'Avatar' or start the avatar bot
-
-**If you want to try the avatar perspective on your own**, then run a different (private-mode) browser and go
-to `localhost:5000` and login as `Avatar` using the `<avatar-token>`.
+#### 3. Start the avatar bot
 
 **If the avatar is supposed to be your bot**, then run the `game_avatar_cli --token <avatar-token>` script or the
 the `game-avatar --token <avatar-token>` cli. This will start the bot just like with the game master.
@@ -130,35 +128,3 @@ session with the `/start` command in the chat window.
 Another note: The dialog history will be persistent for the room. If you want to "remove" the dialog history, then you
 have to create another room using the `game-setup` cli (or restart slurk and redo everything above). The simple avatar
 does not keep track of the dialog history.
-
-## B. Run everything with ngrok (temporarily externally available)
-
-This setup will allow you to play temporarily with others over the internet.
-
-First, do everything as in *Run everything on localhost: Prepare servers and data*.
-
-### Prepare ngrok
-
-1. Externalize the slurk server using `ngrok http 5000` which will give you something like `<slurk-hash>.ngrok.io`
-1. Externalize the image server using `ngrok http 8000` which will give you something like `<image-hash>.ngrok.io`
-
-### Prepare clients and bots
-
-#### 1. Start the game master bot
-
-Run the `game_master_cli --token <master-token> --image_server_host <image-hash>.ngrok.io --image_server_port 80`. This
-will connect the game master with slurk. This will create image-urls that point to `<image-hash>.ngrok.io:80` which
-makes the images accessible over the internet. If you run the game master on the same host as slurk, then the game
-master will automatically connect to `localhost:5000`. If you run the game master on another machine than slurk, then
-you probably want to also provide the `--slurk_host <slurk-hash>.ngrok.io` and `--slurk_port 80` options.
-
-#### 2. Start a browser for the 'Player'
-
-Run a (private-mode) browser and go to `<slurk-hash>.ngrok.io` and login as `Player` using the player token. You might
-have to wait a minute until you can also connect as the second player.
-
-#### 3. Start a browser for the 'Avatar'
-
-Run a different (private-mode) browser and go to `<slurk-hash>.ngrok.io` and login as `Avatar` using the avatar token.
-If the avatar is a bot, then the bot will have to use the token, when the connection is about to be established, just
-like with the game master.
