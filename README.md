@@ -1,4 +1,64 @@
-# A MapWorld Avatar Game (WS21 PM Vision)
+# A MapWorld Avatar Game For Image Retrieval (WS21 IM)
+
+# Repository Structure
+This project is the Avatar Game. It has the following structure:
+
+    ├── /avatar_sgg                          # Game basis
+    │   ├── /captioning                      # code for captioning model used for sentence similarity
+    │   ├── /config                          # General configuration of the game
+    │   ├── /dataset                         # Contain utility tools to load ADE20K or Visual Genome Data for evaluation 
+    │   ├── /image_retrieval                 # code for the sentence to graph model and evaluation tools
+    │   ├── /mapworld                        # The map with the images
+    │   ├── /notebooks                       # Some visualizations of results and model output
+    │   ├── /resources                       # JSON for the layout and the images
+    │   ├── /scripts                         # To initialize the game
+    │   ├── game.py                         # Start the game
+    │   ├── game_avatar.py                  # Start a dummy avatar
+    │   ├── game_avatar_abstract.py         # Base avatar for Image Retrieval
+    |   ├── game_avatar_baseline.py         # Avatar performing Image Retrieval on sentence similarity
+    |   ├── game_avatar_graph.py            # Avatar performing Image Retrieval with sentence to graph
+    │   ├── game_avatar_slurk.py            # Start avatar in slurk
+    │   ├── game_master_slurk.py            # Start master in slurk
+    │   └── game_master_standalone.py       # Start master
+    ├── /results                             # Text output of the different metrics displayed in the final report
+    ├── /tests                               # Some MapWorld tests
+    └── /setup.py                            # To install the game
+    
+
+# Pre-requisite
+
+You can play the game with 2 avatars, the baseline avatar and the Sentence-To-Graph avatar.
+
+The model for the Sentence-To-Graph avatar can be downloaded under:
+`https://drive.google.com/file/d/1ViWIsK5W87VU6aMYspRYlrUfa3sdHIpN/view?usp=sharing`
+
+It was trained using the Scene Graph Benchmark from `https://github.com/rafiberlin/Scene-Graph-Benchmark.pytorch`,
+
+
+We used the published pretrained `SGDet, Causal TDE, MOTIFS Model, SUM Fusion` model and followed the instructions
+concerning image retrieval under 
+`https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch/blob/master/maskrcnn_benchmark/image_retrieval/S2G-RETRIEVAL.md`
+The json files defined in the configuration under the key `scene_graph` were either dowloaded following instructions 
+for the Scene Graph Benchmark or were produced training the model (but are not necessary to play the game, only to run 
+some evaluation) .
+
+To use one of the avatars for a game session, you need to assigne the desired version in:
+
+`avatar_sgg/scripts/slurk/game_avatar_cli.py`
+
+Either:
+
+`avatar_model = BaselineAvatar(image_directory)`
+
+Or:
+
+`avatar_model = GraphAvatar(image_directory)`
+
+
+You will also need to download the ADE20K images und some additional annotations for them 
+under `https://github.com/clp-research/image-description-sequences`.
+
+Configure the entry `ade20k` in the configuration file accordingly.
 
 # Installation
 
@@ -56,10 +116,7 @@ connect the game master with slurk. By default, this will create image-urls that
 
 Run a (private-mode) browser and go to `localhost:5000` and login as `Player` using the `<player-token>`.
 
-#### 3. Start a browser for the 'Avatar' or start the avatar bot
-
-**If you want to try the avatar perspective on your own**, then run a different (private-mode) browser and go
-to `localhost:5000` and login as `Avatar` using the `<avatar-token>`.
+#### 3. Start the avatar bot
 
 **If the avatar is supposed to be your bot**, then run the `game_avatar_cli --token <avatar-token>` script or the
 the `game-avatar --token <avatar-token>` cli. This will start the bot just like with the game master.
@@ -71,35 +128,3 @@ session with the `/start` command in the chat window.
 Another note: The dialog history will be persistent for the room. If you want to "remove" the dialog history, then you
 have to create another room using the `game-setup` cli (or restart slurk and redo everything above). The simple avatar
 does not keep track of the dialog history.
-
-## B. Run everything with ngrok (temporarily externally available)
-
-This setup will allow you to play temporarily with others over the internet.
-
-First, do everything as in *Run everything on localhost: Prepare servers and data*.
-
-### Prepare ngrok
-
-1. Externalize the slurk server using `ngrok http 5000` which will give you something like `<slurk-hash>.ngrok.io`
-1. Externalize the image server using `ngrok http 8000` which will give you something like `<image-hash>.ngrok.io`
-
-### Prepare clients and bots
-
-#### 1. Start the game master bot
-
-Run the `game_master_cli --token <master-token> --image_server_host <image-hash>.ngrok.io --image_server_port 80`. This
-will connect the game master with slurk. This will create image-urls that point to `<image-hash>.ngrok.io:80` which
-makes the images accessible over the internet. If you run the game master on the same host as slurk, then the game
-master will automatically connect to `localhost:5000`. If you run the game master on another machine than slurk, then
-you probably want to also provide the `--slurk_host <slurk-hash>.ngrok.io` and `--slurk_port 80` options.
-
-#### 2. Start a browser for the 'Player'
-
-Run a (private-mode) browser and go to `<slurk-hash>.ngrok.io` and login as `Player` using the player token. You might
-have to wait a minute until you can also connect as the second player.
-
-#### 3. Start a browser for the 'Avatar'
-
-Run a different (private-mode) browser and go to `<slurk-hash>.ngrok.io` and login as `Avatar` using the avatar token.
-If the avatar is a bot, then the bot will have to use the token, when the connection is about to be established, just
-like with the game master.
