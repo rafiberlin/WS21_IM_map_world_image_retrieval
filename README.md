@@ -4,22 +4,22 @@
 This project is the Avatar Game. It has the following structure:
 
     ├── /avatar_sgg                          # Game basis
-    │   ├── /captioning                      # code for captioning model used for sentence similarity
+    │   ├── /captioning                      # Code for captioning model used for sentence similarity
     │   ├── /config                          # General configuration of the game
     │   ├── /dataset                         # Contain utility tools to load ADE20K or Visual Genome Data for evaluation 
-    │   ├── /image_retrieval                 # code for the sentence to graph model and evaluation tools
+    │   ├── /image_retrieval                 # Code for the sentence to graph model and evaluation tools
     │   ├── /mapworld                        # The map with the images
     │   ├── /notebooks                       # Some visualizations of results and model output
     │   ├── /resources                       # JSON for the layout and the images
     │   ├── /scripts                         # To initialize the game
-    │   ├── game.py                         # Start the game
-    │   ├── game_avatar.py                  # Start a dummy avatar
-    │   ├── game_avatar_abstract.py         # Base avatar for Image Retrieval
-    |   ├── game_avatar_baseline.py         # Avatar performing Image Retrieval on sentence similarity
-    |   ├── game_avatar_graph.py            # Avatar performing Image Retrieval with sentence to graph
-    │   ├── game_avatar_slurk.py            # Start avatar in slurk
-    │   ├── game_master_slurk.py            # Start master in slurk
-    │   └── game_master_standalone.py       # Start master
+    │   ├── game.py                          # Start the game
+    │   ├── game_avatar.py                   # Start a dummy avatar
+    │   ├── game_avatar_abstract.py          # Base avatar for Image Retrieval
+    |   ├── game_avatar_baseline.py          # Avatar performing Image Retrieval on sentence similarity
+    |   ├── game_avatar_graph.py             # Avatar performing Image Retrieval with sentence to graph
+    │   ├── game_avatar_slurk.py             # Start avatar in slurk
+    │   ├── game_master_slurk.py             # Start master in slurk
+    │   └── game_master_standalone.py        # Start master
     ├── /results                             # Text output of the different metrics displayed in the final report
     ├── /tests                               # Some MapWorld tests
     └── /setup.py                            # To install the game
@@ -34,7 +34,7 @@ The model for the Sentence-To-Graph avatar can be downloaded under:
 
 It was trained using the Scene Graph Benchmark from `https://github.com/rafiberlin/Scene-Graph-Benchmark.pytorch`,
 
-
+/clp-research/image-description-sequences
 We used the published pretrained `SGDet, Causal TDE, MOTIFS Model, SUM Fusion` model and followed the instructions
 concerning image retrieval under 
 `https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch/blob/master/maskrcnn_benchmark/image_retrieval/S2G-RETRIEVAL.md`
