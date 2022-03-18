@@ -34,9 +34,8 @@ The model for the Sentence-To-Graph avatar can be downloaded under:
 
 It was trained using the Scene Graph Benchmark from `https://github.com/rafiberlin/Scene-Graph-Benchmark.pytorch`,
 
-/clp-research/image-description-sequences
 We used the published pretrained `SGDet, Causal TDE, MOTIFS Model, SUM Fusion` model and followed the instructions
-concerning image retrieval under 
+concerning image retrieval under: 
 `https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch/blob/master/maskrcnn_benchmark/image_retrieval/S2G-RETRIEVAL.md`
 The json files defined in the configuration under the key `scene_graph` were either dowloaded following instructions 
 for the Scene Graph Benchmark or were produced training the model (but are not necessary to play the game, only to run 
