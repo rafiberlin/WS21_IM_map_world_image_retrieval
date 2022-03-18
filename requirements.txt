@@ -3,8 +3,10 @@
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/datasets/coco.py: 5
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/inference.py: 5
 # clp-sose21-pm-vision/avatar_sgg/notebooks/util.py: 2
-# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/util.py: 7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/datasets/coco.py: 5
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/inference.py: 5
 # clp-sose21-pm-vision/build/lib/avatar_sgg/notebooks/util.py: 2
+# clp-sose21-pm-vision/test.py: 2
 Pillow == 8.4.0
 
 # clp-sose21-pm-vision/avatar_sgg/config/util.py: 1
@@ -12,14 +14,13 @@ Pillow == 8.4.0
 # clp-sose21-pm-vision/build/lib/avatar_sgg/config/util.py: 1
 PyYAML == 6.0
 
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/datasets/coco.py: 12
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/engine.py: 8
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/hubconf.py: 3,4
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/inference.py: 6,7,8,9
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/main.py: 12
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/backbone.py: 11,13
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/caption.py: 5,6,7
-# clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/position_encoding.py: 6
+# clp-sose21-pm-vision/avatar_sgg/dataset/ade20k.py: 10
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/scene_graph_similarity_model.py: 7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/ade20k.py: 10
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/scene_graph_similarity_model.py: 7
+SceneGraphParser == 0.0.1
+
+# clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/game_metrics-checkpoint.ipynb: 2
 # clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/visualize-checkpoint.ipynb: 3
 avatar == 0.0.1
 
@@ -35,8 +36,12 @@ avatar == 0.0.1
 # clp-sose21-pm-vision/build/lib/avatar_sgg/scripts/standalone/player_cli.py: 1
 click == 7.1.2
 
+# clp-sose21-pm-vision/avatar_sgg/scripts/standalone/game_master_cli.py: 5
+# clp-sose21-pm-vision/build/lib/avatar_sgg/scripts/standalone/game_master_cli.py: 5
+eventlet == 0.33.0
+
 # clp-sose21-pm-vision/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 2
-# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline.py: 5
+# clp-sose21-pm-vision/build/lib/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 2
 gensim == 4.1.2
 
 # clp-sose21-pm-vision/avatar_sgg/mapworld/mapworld.py: 7
@@ -44,8 +49,15 @@ gensim == 4.1.2
 ipython == 7.16.1
 
 # clp-sose21-pm-vision/avatar_sgg/mapworld/maps.py: 28
+# clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/plot_metrics-checkpoint.ipynb: 4,5
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/.ipynb_checkpoints/LearningPandasandPylab-checkpoint.ipynb: 4,5
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/.ipynb_checkpoints/ABDOULE_LATIF_LearningPandasandPylab-checkpoint.ipynb: 4,5
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/ABDOULE_LATIF_LearningPandasandPylab.ipynb: 4,5
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/.ipynb_checkpoints/ABDOULE_LATIF - Models, Data, Learning Problems-checkpoint.ipynb: 24
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/.ipynb_checkpoints/Models, Data, Learning Problems-checkpoint.ipynb: 24
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/ABDOULE_LATIF - Models, Data, Learning Problems.ipynb: 24
+# clp-sose21-pm-vision/avatar_sgg/notebooks/plot_metrics.ipynb: 4,5
 # clp-sose21-pm-vision/avatar_sgg/notebooks/util.py: 1
-# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/util.py: 6
 # clp-sose21-pm-vision/build/lib/avatar_sgg/mapworld/maps.py: 28
 # clp-sose21-pm-vision/build/lib/avatar_sgg/notebooks/util.py: 1
 # clp-sose21-pm-vision/tests/test_maps.py: 3
@@ -55,20 +67,62 @@ matplotlib == 3.3.4
 # clp-sose21-pm-vision/build/lib/avatar_sgg/mapworld/maps.py: 22
 networkx == 2.5
 
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/.ipynb_checkpoints/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20-checkpoint.ipynb: 80
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20.ipynb: 80
+nltk == 3.6.7
+
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/datasets/coco.py: 6
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/inference.py: 10
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/main.py: 4
+# clp-sose21-pm-vision/avatar_sgg/dataset/ade20k.py: 11
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/baseline_ade20k.py: 6
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/baseline_vg.py: 7
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/scene_graph_similarity_model.py: 6
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/sgg_ade20k.py: 7
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/text_graph_ade20k.py: 7
 # clp-sose21-pm-vision/avatar_sgg/mapworld/maps.py: 21
+# clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/plot_metrics-checkpoint.ipynb: 2,6
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/.ipynb_checkpoints/LearningPandasandPylab-checkpoint.ipynb: 2
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/.ipynb_checkpoints/ABDOULE_LATIF_LearningPandasandPylab-checkpoint.ipynb: 2
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/ABDOULE_LATIF_LearningPandasandPylab.ipynb: 2
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/.ipynb_checkpoints/ABDOULE_LATIF - Models, Data, Learning Problems-checkpoint.ipynb: 42
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/.ipynb_checkpoints/Models, Data, Learning Problems-checkpoint.ipynb: 42
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/ABDOULE_LATIF - Models, Data, Learning Problems.ipynb: 42
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/.ipynb_checkpoints/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20-checkpoint.ipynb: 70
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20.ipynb: 70
+# clp-sose21-pm-vision/avatar_sgg/notebooks/plot_metrics.ipynb: 2,6
 # clp-sose21-pm-vision/avatar_sgg/notebooks/util.py: 3
 # clp-sose21-pm-vision/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 1
-# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/util.py: 8
-# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline.py: 4
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/datasets/coco.py: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/inference.py: 10
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/main.py: 4
+# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/ade20k.py: 11
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline.py: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline_ade20k.py: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline_vg.py: 7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/scene_graph_similarity_model.py: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/sgg_ade20k.py: 7
 # clp-sose21-pm-vision/build/lib/avatar_sgg/mapworld/maps.py: 21
 # clp-sose21-pm-vision/build/lib/avatar_sgg/notebooks/util.py: 3
+# clp-sose21-pm-vision/build/lib/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 1
 numpy == 1.19.2
 
-# clp-sose21-pm-vision/avatar_sgg/dataset/util.py: 4
+# clp-sose21-pm-vision/avatar_sgg/dataset/ade20k.py: 3
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/evaluation.py: 11
+# clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/game_metrics-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/plot_metrics-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/.ipynb_checkpoints/LearningPandasandPylab-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/.ipynb_checkpoints/ABDOULE_LATIF_LearningPandasandPylab-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/ABDOULE_LATIF_LearningPandasandPylab.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/_/pandas_crosstab.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/.ipynb_checkpoints/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/game_metrics.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/plot_metrics.ipynb: 1
+# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/ade20k.py: 3
 # clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/util.py: 4
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline.py: 7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/evaluation.py: 11
 pandas == 1.1.5
 
 # clp-sose21-pm-vision/avatar_sgg/game_master_standalone.py: 4
@@ -83,8 +137,26 @@ python_socketio == 5.5.0
 # clp-sose21-pm-vision/build/lib/avatar_sgg/scripts/slurk/game_setup_cli.py: 5
 requests == 2.25.1
 
-# clp-sose21-pm-vision/avatar_sgg/image_retrieval/baseline.py: 5
-# clp-sose21-pm-vision/avatar_sgg/sentence_embedding/test.py: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/.ipynb_checkpoints/ABDOULE_LATIF - Models, Data, Learning Problems-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/.ipynb_checkpoints/Models, Data, Learning Problems-checkpoint.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab2/ABDOULE_LATIF - Models, Data, Learning Problems.ipynb: 1
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/.ipynb_checkpoints/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20-checkpoint.ipynb: 64,99,130
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab3/Problem_Analysis_and_Data_Preprocessing2020/ABDOULELATIF_Problem_Analysis_and_Data_Preprocessing20.ipynb: 64,99,130
+scikit_learn == 0.24.2
+
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/.ipynb_checkpoints/LearningPandasandPylab-checkpoint.ipynb: 7
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/.ipynb_checkpoints/ABDOULE_LATIF_LearningPandasandPylab-checkpoint.ipynb: 7
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/LearningPandasandPylab_2020/ABDOULE_LATIF_LearningPandasandPylab.ipynb: 7
+# clp-sose21-pm-vision/avatar_sgg/notebooks/ML/Lab1/_/pandas_crosstab.ipynb: 2
+seaborn == 0.11.2
+
+# clp-sose21-pm-vision/avatar_sgg/game_avatar_baseline.py: 8
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/evaluation.py: 2
+# clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/visualize-checkpoint.ipynb: 6
+# clp-sose21-pm-vision/avatar_sgg/notebooks/visualize.ipynb: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/game_avatar_baseline.py: 8
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/evaluation.py: 2
+# clp-sose21-pm-vision/build/lib/avatar_sgg/sentence_embedding/test.py: 1
 sentence_transformers == 2.1.0
 
 # clp-sose21-pm-vision/setup.py: 6
@@ -113,27 +185,56 @@ socketIO_client == 0.7.2
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/position_encoding.py: 3,4
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/transformer.py: 7
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/utils.py: 4,5,6
+# clp-sose21-pm-vision/avatar_sgg/dataset/ade20k.py: 7,8
+# clp-sose21-pm-vision/avatar_sgg/dataset/visual_genome.py: 3,4
+# clp-sose21-pm-vision/avatar_sgg/game_avatar_baseline.py: 13
+# clp-sose21-pm-vision/avatar_sgg/game_avatar_graph.py: 12
 # clp-sose21-pm-vision/avatar_sgg/image_retrieval/evaluation.py: 1
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/scene_graph_similarity_model.py: 1,2,3
+# clp-sose21-pm-vision/avatar_sgg/image_retrieval/sgg_ade20k.py: 11
 # clp-sose21-pm-vision/avatar_sgg/notebooks/.ipynb_checkpoints/visualize-checkpoint.ipynb: 4
 # clp-sose21-pm-vision/avatar_sgg/notebooks/visualize.ipynb: 4
 # clp-sose21-pm-vision/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 3
 # clp-sose21-pm-vision/avatar_sgg/sentence_embedding/util.py: 1
-# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline.py: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/datasets/coco.py: 1
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/datasets/utils.py: 1,3
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/engine.py: 2
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/hubconf.py: 1
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/inference.py: 1,2
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/main.py: 1,2
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/model/backbone.py: 4,5,7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/model/caption.py: 1,2,3
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/model/position_encoding.py: 3,4
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/model/transformer.py: 7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/model/utils.py: 4,5,6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/ade20k.py: 7,8
+# clp-sose21-pm-vision/build/lib/avatar_sgg/dataset/visual_genome.py: 3,4
+# clp-sose21-pm-vision/build/lib/avatar_sgg/game_avatar_baseline.py: 13
+# clp-sose21-pm-vision/build/lib/avatar_sgg/game_avatar_graph.py: 12
 # clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/evaluation.py: 1
-# clp-sose21-pm-vision/test.py: 2
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/scene_graph_similarity_model.py: 1,2,3
+# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/sgg_ade20k.py: 11
+# clp-sose21-pm-vision/build/lib/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 3
+# clp-sose21-pm-vision/build/lib/avatar_sgg/sentence_embedding/util.py: 1
 torch == 1.6.0+cu101
 
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/datasets/coco.py: 2,3
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/model/backbone.py: 6,8
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/datasets/coco.py: 2,3
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/model/backbone.py: 6,8
 torchvision == 0.7.0+cu101
 
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/engine.py: 6
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/engine.py: 6
+# clp-sose21-pm-vision/test.py: 4
 tqdm == 4.62.3
 
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/datasets/coco.py: 10
 # clp-sose21-pm-vision/avatar_sgg/captioning/catr/inference.py: 4
 # clp-sose21-pm-vision/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 4
-# clp-sose21-pm-vision/build/lib/avatar_sgg/image_retrieval/baseline.py: 7
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/datasets/coco.py: 10
+# clp-sose21-pm-vision/build/lib/avatar_sgg/captioning/catr/inference.py: 4
+# clp-sose21-pm-vision/build/lib/avatar_sgg/sentence_embedding/distilbert_vectorizer.py: 4
 transformers == 4.15.0
 
 # clp-sose21-pm-vision/avatar_sgg/mapworld/mapworld.py: 6

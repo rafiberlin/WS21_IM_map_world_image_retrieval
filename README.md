@@ -1,4 +1,63 @@
-# A MapWorld Avatar Game (WS21 PM Vision)
+# A MapWorld Avatar Game For Image Retrieval (WS21 IM)
+
+# Repository Structure
+This project is the Avatar Game. It has the following structure:
+
+    ├── /avatar_sgg                          # Game basis
+    │   ├── /captioning                      # code for captioning model used for sentence similarity
+    │   ├── /config                          # General configuration of the game
+    │   ├── /dataset                         # Contain utility tools to load ADE20K or Visual Genome Data for evaluation 
+    │   ├── /image_retrieval                 # code for the sentence to graph model and evaluation tools
+    │   ├── /mapworld                        # The map with the images
+    │   ├── /notebooks                       # Some visualizations of results and model output
+    │   ├── /resources                       # JSON for the layout and the images
+    │   ├── /scripts                         # To initialize the game
+    │   ├── game.py                         # Start the game
+    │   ├── game_avatar.py                  # Start a dummy avatar
+    │   ├── game_avatar_abstract.py         # Base avatar for Image Retrieval
+    |   ├── game_avatar_baseline.py         # Avatar performing Image Retrieval on sentence similarity
+    |   ├── game_avatar_graph.py            # Avatar performing Image Retrieval with sentence to graph
+    │   ├── game_avatar_slurk.py            # Start avatar in slurk
+    │   ├── game_master_slurk.py            # Start master in slurk
+    │   └── game_master_standalone.py       # Start master
+    ├── /results                             # Text output of the different metrics displayed in the final report
+    ├── /tests                               # Some MapWorld tests
+    └── /setup.py                            # To install the game
+    
+
+# Pre-requisite
+
+You can play the game with 2 avatars, the baseline avatar and the Sentence-To-Graph avatar.
+
+The model for the Sentence-To-Graph avatar can be downloaded under:
+`https://drive.google.com/file/d/1ViWIsK5W87VU6aMYspRYlrUfa3sdHIpN/view?usp=sharing`
+
+It was trained using the Scene Graph Benchmark from `https://github.com/rafiberlin/Scene-Graph-Benchmark.pytorch`,
+
+
+We used the published pretrained `SGDet, Causal TDE, MOTIFS Model, SUM Fusion` model and followed the instructions
+concerning image retrieval under 
+`https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch/blob/master/maskrcnn_benchmark/image_retrieval/S2G-RETRIEVAL.md`
+The json files defined in the configuration under the key `scene_graph` were either dowloaded following instructions 
+for the Scene Graph Benchmark or were produced training the model.
+
+To use one of the avatars for a game session, you need to assigne the desired version in:
+
+`avatar_sgg/scripts/slurk/game_avatar_cli.py`
+
+Either:
+
+`avatar_model = BaselineAvatar(image_directory)`
+
+Or:
+
+`avatar_model = GraphAvatar(image_directory)`
+
+
+You will also need to download the ADE20K images und some additional annotations for them 
+under `https://github.com/clp-research/image-description-sequences`.
+
+Configure the entry `ade20k` in the configuration file accordingly.
 
 # Installation
 
